@@ -27,10 +27,28 @@ namespace Modelo
         #endregion
 
         #region Métodos a ejecutar
-
+   
         public void EjecutarSP(SqlParameter[]parParametros, string pasSPName)
         {
-
+            try {
+                cnnConexion = new SqlConnection(strCadenaConexion);
+                cmdComando = new SqlCommand();
+                cmdComando.Connection = cnnConexion;
+                cnnConexion.Open();
+                cmdComando.CommandType = CommandType.StoredProcedure;
+                cmdComando.CommandText = pasSPName;
+                cmdComando.Parameters.AddRange(parParametros);
+                cmdComando.ExecuteNonQuery();
+            }
+            catch (Exception e)
+            {
+                throw new Exception(e.Message);
+            }
+            finally
+            {
+                cnnConexion.Dispose();
+                cmdComando.Dispose();
+            }
         }
 
         
@@ -54,6 +72,7 @@ namespace Modelo
             {
                 throw new Exception(e.Message);
 
+
             }
             finally
             {
@@ -64,8 +83,12 @@ namespace Modelo
 
             return Dtt;
         }
-        
-        
+
+
         #endregion
+
+
     }
+
+
 }
